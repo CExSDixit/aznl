@@ -13,12 +13,29 @@ This utility lets you use natural language to query Azure CLI (`az cli`) command
 
 ---
 
-## Setup
+## Quick Dev Environment & Build Setup (Scripted)
+
+For a one-step setup, use the provided script to prepare your development environment and build everything needed:
+
+```bash
+bash dev_setup.sh
+```
+
+This will:
+- Create a Python virtual environment (if not present)
+- Install all dependencies
+- Copy `.env.example` to `.env` if needed
+- Remind you to add your API keys to `.env`
+- (Optional) Build/install the CLI for development
+
+---
+
+## Manual Setup
 
 ### 1. Clone the Repository
 ```bash
 git clone <your-repo-url>
-cd azure-docs-cursor
+cd aznl
 ```
 
 ### 2. Create and Activate a Virtual Environment
@@ -48,6 +65,21 @@ pip install -r requirements.txt
   OPENROUTER_API_KEY=sk-...
   OLLAMA_API_KEY=   # (leave blank for local Ollama)
   ```
+
+---
+
+## Build/Install CLI for Development
+
+To install the CLI globally (for development):
+```bash
+pip install --editable .
+```
+Or, for a one-time install:
+```bash
+pip install .
+```
+
+---
 
 ### 5. Configure Provider and Model (Optional)
 Edit `config.json` to set your preferred provider order and model names:

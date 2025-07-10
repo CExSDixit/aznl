@@ -6,10 +6,12 @@ Author: Your Name
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
+License-File: LICENSE
 Requires-Dist: openai
 Requires-Dist: requests
 Requires-Dist: python-dotenv
 Dynamic: author
 Dynamic: classifier
+Dynamic: license-file
 Dynamic: requires-dist
 Dynamic: summary
