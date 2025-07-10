@@ -1,5 +1,5 @@
 {
   "provider_order": ["openrouter", "ollama"],
-  "openrouter_model": "gpt-3.5-turbo",
-  "ollama_model": "llama2"
+  "openrouter_model": "deepseek/deepseek-chat-v3-0324:free",
+  "ollama_model": "mistral:latest"
 } 
