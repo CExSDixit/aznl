@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: aznl
+Version: 0.1
+Summary: Natural language Azure CLI query tool using LLMs
+Author: Your Name
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Dist: openai
+Requires-Dist: requests
+Requires-Dist: python-dotenv
+Dynamic: author
+Dynamic: classifier
+Dynamic: requires-dist
+Dynamic: summary

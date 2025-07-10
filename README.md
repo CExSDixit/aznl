@@ -61,16 +61,38 @@ You can also add `openrouter_extra_headers` for custom headers (see OpenRouter d
 
 ---
 
+## Global CLI Usage (Recommended: pip install with setup.py)
+
+You can install this tool globally as a CLI command using pip and the provided `setup.py`:
+
+1. **Install in Editable Mode (for development):**
+   ```bash
+   pip install --editable .
+   ```
+   Or, for a one-time install:
+   ```bash
+   pip install .
+   ```
+
+2. **Run from Anywhere:**
+   ```bash
+   aznl "List AKS clusters"
+   ```
+
+**Note:** You must still activate your virtual environment or ensure all dependencies are installed globally for the script to work.
+
+---
+
 ## Usage
 
 ### Basic Query
 ```bash
-python main.py "How do I list all resource groups in Azure?"
+aznl "How do I list all resource groups in Azure?"
 ```
 
 ### Specify Provider or Model
 ```bash
-python main.py "List AKS clusters" --provider openrouter --model openai/gpt-4o
+aznl "List AKS clusters" --provider openrouter --model openai/gpt-4o
 ```
 
 ### Example Output
