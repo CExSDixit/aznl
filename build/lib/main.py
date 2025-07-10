@@ -128,25 +128,72 @@ def query_llm(nl_query, provider_order, openrouter_model, ollama_model, provider
 def main():
     parser = argparse.ArgumentParser(description='Query az cli commands using natural language.')
     parser.add_argument('query', type=str, nargs='+', help='Your natural language query')
-    parser.add_argument('--provider', type=str, choices=['openrouter', 'ollama'], help='Provider to use (overrides config)')
-    parser.add_argument('--model', type=str, help='Model to use (overrides config)')
+    parser.add_argument('--provider', '-p', type=str, choices=['openrouter', 'ollama'], help='Provider to use (overrides config)')
+    parser.add_argument('--model', '-m', type=str, help='Model to use (overrides config)')
+    parser.add_argument('--just-command', '-q', action='store_true', help='Output only the az cli command (no explanation or docs)')
+    parser.add_argument('--verbose', '-v', action='store_true', help='Show detailed logs (provider/model, fallback, errors)')
     args = parser.parse_args()
     nl_query = ' '.join(args.query)
     provider_order = config.get('provider_order', ['openrouter', 'ollama'])
     openrouter_model = config.get('openrouter_model', 'gpt-3.5-turbo')
     ollama_model = config.get('ollama_model', 'llama2')
-    result = query_llm(
+
+    def log(msg):
+        if args.verbose:
+            print(msg)
+
+    def query_llm_verbose(*qargs, **qkwargs):
+        tried = []
+        if args.provider:
+            qkwargs['provider_override'] = args.provider
+        if args.model:
+            qkwargs['model_override'] = args.model
+        # Load extra_headers from config if present
+        extra_headers = None
+        if os.path.exists(CONFIG_FILE):
+            with open(CONFIG_FILE, 'r') as f:
+                cfg = json.load(f)
+                extra_headers = cfg.get('openrouter_extra_headers')
+        for idx, provider in enumerate(qargs[1]):
+            tried.append(provider)
+            if provider == 'openrouter':
+                model = qkwargs.get('model_override') or qargs[2]
+                log(f"Invoking OpenRouter with model: {model}")
+                api_key = get_api_key('openrouter')
+                try:
+                    result = call_openrouter(qargs[0], model, api_key, extra_headers=extra_headers)
+                    if result:
+                        return result
+                except Exception as e:
+                    log(f"OpenRouter failed: {e}")
+                    if idx + 1 < len(qargs[1]) and qargs[1][idx + 1] == 'ollama':
+                        next_model = qkwargs.get('model_override') or qargs[3]
+                        log(f"Falling back to Ollama (local LLM) with model: {next_model} ...")
+            elif provider == 'ollama':
+                model = qkwargs.get('model_override') or qargs[3]
+                log(f"Invoking Ollama (local LLM) with model: {model}")
+                try:
+                    result = call_ollama(qargs[0], model)
+                    if result:
+                        return result
+                except Exception as e:
+                    log(f"Ollama failed: {e}")
+        log(f"All providers failed: {tried}")
+        return None
+
+    result = query_llm_verbose(
         nl_query,
         provider_order,
         openrouter_model,
         ollama_model,
-        provider_override=args.provider,
-        model_override=args.model
     )
     if result:
-        print(f"\nCommand: {result['command']}")
-        print(f"Explanation: {result['explanation']}")
-        print(f"Docs: {result['doc_link']}")
+        if args.just_command:
+            print(result['command'])
+        else:
+            print(f"\nCommand: {result['command']}")
+            print(f"Explanation: {result['explanation']}")
+            print(f"Docs: {result['doc_link']}")
     else:
         print("No result found.")
 
