@@ -9,6 +9,7 @@ This utility lets you use natural language to query Azure CLI (`az cli`) command
 - Uses OpenRouter (cloud) or Ollama (local) as LLM providers
 - Returns command, explanation, and doc link
 - Configurable provider/model preferences and API keys
+- **Quiet mode**: Output only the az cli command for piping (`-q` or `--just-command`)
 
 ---
 
@@ -95,7 +96,20 @@ aznl "How do I list all resource groups in Azure?"
 aznl "List AKS clusters" --provider openrouter --model openai/gpt-4o
 ```
 
-### Example Output
+### Quiet Mode (Output Only the Command)
+Use `-q` or `--just-command` to output only the az cli command (no explanation or docs), suitable for piping:
+```bash
+aznl "List AKS clusters" -q
+# or
+aznl "List AKS clusters" --just-command
+```
+
+#### Example (Piping to Shell)
+```bash
+aznl "List AKS clusters" -q | bash
+```
+
+### Example Output (Default)
 ```
 Command: az aks list
 Explanation: Lists all AKS (Azure Kubernetes Service) clusters in the current subscription.
