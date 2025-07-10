@@ -1,0 +1,5 @@
+{
+  "provider_order": ["openrouter", "ollama"],
+  "openrouter_model": "gpt-3.5-turbo",
+  "ollama_model": "llama2"
+} 
