@@ -2,6 +2,7 @@
 
 This utility lets you use natural language to query Azure CLI (`az cli`) commands by referencing the official Azure documentation. It uses LLMs (OpenRouter or local Ollama) to interpret your queries and return the most relevant command, explanation, and documentation link.
 
+
 ---
 
 ## Features
